@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+	<TITLE>Doctor Test</TITLE>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="doctorbot.js"></SCRIPT>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="doctordata.js"></SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+
+// initialize with argument 'true': no random choices
+var doctor = new DoctorBot(true);
+
+var exampleLines= [
+"Men are all alike.",
+"They're always bugging us about something or other.",
+"Well, my boyfriend made me come here.",
+"He says I'm depressed much of the time.",
+"It's true. I am unhappy.",
+"I need some help, that much seems certain.",
+"Perhaps I could learn to get along with my mother.",
+"My mother takes care of me.",
+"My father.",
+"You are like my father in some ways.",
+"You are not very aggressive but I think you don't want me to notice that.",
+"You don't argue with me.",
+"You are afraid of me.",
+"My father is afraid of everybody.",
+"Bullies."
+];
+
+var exampleCursor=0;
+
+function doctorReset() {
+	doctor.reset();
+	exampleCursor=0;
+}
+
+function doctorNext() {
+	if (exampleCursor >= exampleLines.length) {
+		alert('Last entry reached.\nClick "Reset" to start over again.');
+		return;
+	}
+	var userinput = exampleLines[exampleCursor++];
+	document.forms.eform.edisplay.value += 'USER:  ' + userinput + '\n';
+	document.forms.eform.edisplay.value += 'DOCTOR: ' + doctor.transform(userinput) + '\n';
+}
+
+//-->
+</SCRIPT>
+</HEAD>
+
+<BODY TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" STYLE="border:0"><A NAME="top"></A>
+
+<CENTER>
+<P>&nbsp;</P>
+<H3>Doctor Test</H3>
+<TABLE BORDER="0" CELLSPACING="10" CELLPADDING="0">
+<FORM NAME="eform" onsubmit="return false">
+<TR VALIGN="top">
+<TD><TEXTAREA NAME="edisplay" COLS="80" ROWS="32"></TEXTAREA></TD>
+<TD ALIGN="center"><INPUT TYPE="button" VALUE="Next step" onclick="doctorNext()"><BR><BR><INPUT TYPE="reset" VALUE="Reset" onclick="doctorReset(); return true"></TD>
+</TR>
+</FORM>
+</TABLE>
+</CENTER>
+
+<P>&nbsp;</P>
+<TABLE BORDER="0" CELLSPACING="12" CELLPADDDING="0">
+<TR>
+
+
+</BODY>
+</HTML>
