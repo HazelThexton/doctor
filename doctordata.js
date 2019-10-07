@@ -5,12 +5,11 @@
 var doctorInitials = [
 "How are you, sweetheart?",
 "Please tell me what's been bothering you.",
-"Is something troubling you ?"
+"What's wrong this time?"
 ];
 
 var doctorFinals = [
 "Goodbye.  It was nice talking to you.",
-// additions (not original)
 "Bye now.",
 "Goodbye.  I'm looking forward to our next session.",
 "This was a good session, wasn't it -- but time is over now.   Goodbye.",
@@ -62,11 +61,13 @@ var doctorSynons = {
 "be": ["am", "is", "are", "was"],
 "belief": ["feel", "think", "believe", "wish"],
 "cannot": ["can't"],
-"desire": ["want", "need"],
+"desire": ["want", "need", "crave"],
 "everyone": ["everybody", "nobody", "noone"],
-"family": ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child"],
-"happy": ["elated", "glad", "better"],
-"sad": ["unhappy", "depressed", "sick"]
+"family": ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child", "sibling"],
+"happy": ["elated", "glad", "better", "good", "well"],
+"sad": ["unhappy", "depressed", "sick", "hurting"],
+"insecure": ["fat","ugly","unattractive","unloved","unlikeable"],
+"angry": ["mad","upset","annoyed","irritated"]
 };
 
 var doctorKeywords = [
@@ -91,10 +92,11 @@ var doctorKeywords = [
  ["*", [
      "You're not making any sense, honey.",
      "Please go on.",
-     "What does that suggest to you ?",
-     "Do you feel strongly about discussing such things ?",
-     "That is interesting.  Please continue.",
-     "Tell me more about that.",
+     "You're not self-diagnosing, are you ?",
+     "Are you getting that from silly articles on the internet?",
+     "Do you have any actual problems I can help you with?",
+     "Hmm.  Please continue.",
+     "Oh, you think?",
      "Does talking about this bother you ?"
   ]]
 ]],
@@ -103,7 +105,7 @@ var doctorKeywords = [
      "Please don't apologise.",
      "Apologies are not necessary.",
      "I've told you that apologies are not required.",
-     "It did not bother me.  Please continue."
+     "It didn't bother me.  Please continue."
   ]]
 ]],
 ["apologise", 0, [
@@ -327,18 +329,30 @@ var doctorKeywords = [
      "Well, if you feel (3) it might just be hormones. ",
      "You're (3) ? Maybe you just need to smile!"
   ]],
+  ["* i am* @insecure *", [
+      "Maybe if you lost some weight you wouldn't feel so (3).",
+      "Nothing a little exercise can't fix!",
+      "Well, if you feel (3) it's probably that time of the month. ",
+      "Nonsense, I'm sure the boys are crazy about you. ",
+      "Isn't that just because of the social media you ladies are into these days?"
+   ]],
+   ["* i am* @angry *", [
+       "Feeling a little overemotional, aren't we?",
+       "Oh, you're (3)? Aren't you exaggerating a little?",
+       "Calm down, there's nothing to be so (3) about."
+    ]],
  ["* i am* @happy *", [
-     "How have I helped you to be (3) ?",
-     "Has your treatment made you (3) ?",
+     "Of course you're (3), pretty girl like you!",
+     "Have I helped you feel (3) ?",
      "What makes you (3) just now ?",
-     "Can you explain why you are suddenly (3) ?"
+     "See? That's what happens when you listen to me."
   ]],
  ["* i was *", [
      "goto was"
   ]],
  ["* i @belief i *", [
-     "Do you really think so ?",
-     "But you are not sure you (3).",
+     "Isn't that just in you imagination?",
+     "Maybe if you think you (3) you should stop reading nonsense on the internet.",
      "Do you really doubt you (3) ?"
   ]],
  ["* i* @belief *you *", [
@@ -349,7 +363,8 @@ var doctorKeywords = [
      "How long have you been (2) ?",
      "Do you believe it is normal to be (2) ?",
      "Do you enjoy being (2) ?",
-     "Do you know anyone else who is (2) ?"
+     "Do you know anyone else who is (2) ?",
+     "Are you really (2), or are you maybe exaggerating?"
   ]],
  ["* i @cannot *", [
      "How do you know that you can't (3) ?",
@@ -379,8 +394,8 @@ var doctorKeywords = [
  ["*", [
      "You say (1) ?",
      "Can you elaborate on that ?",
-     "Do you say (1) for some special reason ?",
-     "Hmm."
+     "Do you say (1) for some specific reason ?",
+     "Hmm.",
   ]]
 ]],
 ["you", 0, [
@@ -412,15 +427,16 @@ var doctorKeywords = [
 ["yes", 0, [
  ["*", [
      "You seem to be quite positive.",
-     "You are sure.",
+     "You're sure?",
      "I see.",
-     "I understand."
+     "Mhmm."
   ]]
 ]],
 ["no", 0, [
  ["* no one *", [
      "Are you sure, no one (2) ?",
      "Surely someone (2) .",
+     "No one? I find women often exaggerate like that.",
      "Can you think of anyone at all ?",
      "Are you thinking of a very special person ?",
      "Who, may I ask ?",
