@@ -1,54 +1,54 @@
 <HTML>
 <HEAD>
-	<TITLE>Doctor (doctorbot.js)</TITLE>
-	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="doctorbot.js"></SCRIPT>
-	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="doctordata.js"></SCRIPT>
+	<TITLE>PUA (puabot.js)</TITLE>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="puabot.js"></SCRIPT>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="puadata.js"></SCRIPT>
 
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
 <!--
 
-var doctor = new DoctorBot();
-var doctorLines = new Array();
+var pua = new PUABot();
+var puaLines = new Array();
 
 var displayCols = 60;
 var displayRows = 20;
 
-function doctorReset() {
-	doctor.reset();
-	doctorLines.length = 0;
-	doctorStep();
+function puaReset() {
+	pua.reset();
+	puaLines.length = 0;
+	puaStep();
 }
 
-function doctorStep() {
+function puaStep() {
 	var f = document.forms.e_form;
 	var userinput = f.e_input.value;
-	if (doctor.quit) {
+	if (pua.quit) {
 		f.e_input.value = '';
-		if (confirm("This session is over.\nStart over?")) doctorReset();
+		if (confirm("Start over?")) puaReset();
 		f.e_input.focus();
 		return;
 	}
 	else if (userinput != '') {
 		var usr = 'YOU:   ' + userinput;
-		var rpl ='DOCTOR: ' + doctor.transform(userinput);
-		doctorLines.push(usr);
-		doctorLines.push(rpl);
+		var rpl ='PUA: ' + pua.transform(userinput);
+		puaLines.push(usr);
+		puaLines.push(rpl);
 		// display nicely
 		// (fit to textarea with last line free - reserved for extra line caused by word wrap)
 		var temp  = new Array();
 		var l = 0;
-		for (var i=doctorLines.length-1; i>=0; i--) {
-			l += 1 + Math.floor(doctorLines[i].length/displayCols);
+		for (var i=puaLines.length-1; i>=0; i--) {
+			l += 1 + Math.floor(puaLines[i].length/displayCols);
 			if (l >= displayRows) break
-			else temp.push(doctorLines[i]);
+			else temp.push(puaLines[i]);
 		}
-		doctorLines = temp.reverse();
-		f.e_display.value = doctorLines.join('\n');
+		puaLines = temp.reverse();
+		f.e_display.value = puaLines.join('\n');
 	}
-	else if (doctorLines.length == 0) {
+	else if (puaLines.length == 0) {
 		// no input and no saved lines -> output initial
-		var initial = 'DOCTOR: ' + doctor.getInitial();
-		doctorLines.push(initial);
+		var initial = 'PUA: ' + pua.getInitial();
+		puaLines.push(initial);
 		f.e_display.value = initial + '\n';
 	}
 	f.e_input.value = '';
@@ -59,22 +59,22 @@ function doctorStep() {
 </SCRIPT>
 </HEAD>
 
-<BODY TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" STYLE="border:0" onload="window.setTimeout('doctorReset()',100)"><A NAME="top"></A>
+<BODY TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" STYLE="border:0" onload="window.setTimeout('puaReset()',100)"><A NAME="top"></A>
 
 <CENTER>
 <P>&nbsp;</P>
-<H3>Doctor</H3>
+<H3>PUA</H3>
 <TABLE BORDER="0" CELLSPACING="10" CELLPADDING="0">
-<FORM NAME="e_form" onsubmit="doctorStep();return false">
+<FORM NAME="e_form" onsubmit="puaStep();return false">
 <TR><TD COLSPAN="2"><TEXTAREA NAME="e_display" COLS="60" ROWS="20"></TEXTAREA></TD></TR>
 <TR VALIGN="middle">
 	<TD><INPUT TYPE="text" NAME="e_input" SIZE="50"></TD>
-	<TD ALIGN="right"><INPUT TYPE="submit" VALUE="&nbsp;Talk&nbsp;"> <INPUT TYPE="reset" VALUE="Reset" onClick="window.setTimeout('doctorReset()',100)"></TD>
+	<TD ALIGN="right"><INPUT TYPE="submit" VALUE="&nbsp;Talk&nbsp;"> <INPUT TYPE="reset" VALUE="Reset" onClick="window.setTimeout('puaReset()',100)"></TD>
 </TR>
 </FORM>
 </TABLE>
 </CENTER>
-<!--/<a href="doctor_test.html">click</a>/-->
+<a href="pua_test.html">click</a>
 
 
 </BODY>

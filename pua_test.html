@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+	<TITLE>PUA Test</TITLE>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="puabot.js"></SCRIPT>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="puadata.js"></SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+
+// initialize with argument 'true': no random choices
+var pua = new PUABot(true);
+
+var exampleLines= [
+"Oh, hello.",
+"What's your name? I'm Kayla.",
+"That's pretty cool!",
+"That's a weird thing for you to say.",
+"Okay, fine. I'm a nursing student.",
+"You're being rude.",
+"Bye, I'm leaving."
+];
+
+var exampleCursor=0;
+
+function puaReset() {
+	pua.reset();
+	exampleCursor=0;
+}
+
+function puaNext() {
+	if (exampleCursor >= exampleLines.length) {
+		alert('Last entry reached.\nClick "Reset" to start over again.');
+		return;
+	}
+	var userinput = exampleLines[exampleCursor++];
+	document.forms.eform.edisplay.value += 'USER:  ' + userinput + '\n';
+	document.forms.eform.edisplay.value += 'BOT: ' + pua.transform(userinput) + '\n';
+}
+
+//-->
+</SCRIPT>
+</HEAD>
+
+<BODY TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" STYLE="border:0"><A NAME="top"></A>
+
+<CENTER>
+<P>&nbsp;</P>
+<H3>PUA Test</H3>
+<TABLE BORDER="0" CELLSPACING="10" CELLPADDING="0">
+<FORM NAME="eform" onsubmit="return false">
+<TR VALIGN="top">
+<TD><TEXTAREA NAME="edisplay" COLS="80" ROWS="32"></TEXTAREA></TD>
+<TD ALIGN="center"><INPUT TYPE="button" VALUE="Next step" onclick="puaNext()"><BR><BR><INPUT TYPE="reset" VALUE="Reset" onclick="puaReset(); return true"></TD>
+</TR>
+</FORM>
+</TABLE>
+</CENTER>
+
+<P>&nbsp;</P>
+<TABLE BORDER="0" CELLSPACING="12" CELLPADDDING="0">
+<TR>
+
+
+</BODY>
+</HTML>

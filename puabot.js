@@ -1,52 +1,4 @@
-/*
-  doctorbot.js v.1.1 - DOCTOR JS library (N.Landsteiner 2005)
-  Doctor is a mock Rogerian psychotherapist.
-  Original program by Joseph Weizenbaum in MAD-SLIP for "Project MAC" at MIT.
-  cf: Weizenbaum, Joseph "DOCTOR - A Computer Program For the Study of Natural Language
-      Communication Between Man and Machine"
-      in: Communications of the ACM; Volume 9 , Issue 1 (January 1966): p 36-45.
-  JavaScript implementation by Norbert Landsteiner 2005; <http://www.masserk.at>
-
-  synopsis:
-
-         new DoctorBot( <random-choice-disable-flag> )
-         DoctorBot.prototype.transform( <inputstring> )
-         DoctorBot.prototype.getInitial()
-         DoctorBot.prototype.getFinal()
-         DoctorBot.prototype.reset()
-
-  usage: var doctor = new DoctorBot();
-         var initial = doctor.getInitial();
-         var reply = doctor.transform(inputstring);
-         if (doctor.quit) {
-             // last user input was a quit phrase
-         }
-
-         // method `transform()' returns a final phrase in case of a quit phrase
-         // but you can also get a final phrase with:
-         var final = doctor.getFinal();
-
-         // other methods: reset memory and internal state
-         doctor.reset();
-
-         // to set the internal memory size override property `memSize':
-         doctor.memSize = 100; // (default: 20)
-
-         // to reproduce the example conversation given by J. Weizenbaum
-         // initialize with the optional random-choice-disable flag
-         var originalDoctor = new DoctorBot(true);
-
-  `DoctorBot' is also a general chatbot engine that can be supplied with any rule set.
-  (for required data structures cf. "doctordata.js" and/or see the documentation.)
-  data is parsed and transformed for internal use at the creation time of the
-  first instance of the `DoctorBot' constructor.
-
-  vers 1.1: lambda functions in RegExps are currently a problem with too many browsers.
-            changed code to work around.
-*/
-
-
-function DoctorBot(noRandomFlag) {
+function PUABot(noRandomFlag) {
 	this.noRandom= (noRandomFlag)? true:false;
 	this.capitalizeFirstLetter=true;
 	this.debug=false;
@@ -56,31 +8,31 @@ function DoctorBot(noRandomFlag) {
 	this.reset();
 }
 
-DoctorBot.prototype.reset = function() {
+PUABot.prototype.reset = function() {
 	this.quit=false;
 	this.mem=[];
 	this.lastchoice=[];
-	for (var k=0; k<doctorKeywords.length; k++) {
+	for (var k=0; k<puaKeywords.length; k++) {
 		this.lastchoice[k]=[];
-		var rules=doctorKeywords[k][2];
+		var rules=puaKeywords[k][2];
 		for (var i=0; i<rules.length; i++) this.lastchoice[k][i]=-1;
 	}
 }
 
-DoctorBot.prototype._dataParsed = false;
+PUABot.prototype._dataParsed = false;
 
-DoctorBot.prototype._init = function() {
+PUABot.prototype._init = function() {
 	// install ref to global object
-	var global=DoctorBot.prototype.global=self;
+	var global=PUABot.prototype.global=self;
 	// parse data and convert it from canonical form to internal use
 	// prodoce synonym list
 	var synPatterns={};
-	if ((global.doctorSynons) && (typeof doctorSynons == 'object')) {
-		for (var i in doctorSynons) synPatterns[i]='('+i+'|'+doctorSynons[i].join('|')+')';
+	if ((global.puaSynons) && (typeof puaSynons == 'object')) {
+		for (var i in puaSynons) synPatterns[i]='('+i+'|'+puaSynons[i].join('|')+')';
 	}
 	// check for keywords or install empty structure to prevent any errors
-	if ((!global.doctorKeywords) || (typeof doctorKeywords.length == 'undefined')) {
-		doctorKeywords=[['###',0,[['###',[]]]]];
+	if ((!global.puaKeywords) || (typeof puaKeywords.length == 'undefined')) {
+		puaKeywords=[['###',0,[['###',[]]]]];
 	}
 	// 1st convert rules to regexps
 	// expand synonyms and insert asterisk expressions for backtracking
@@ -90,9 +42,9 @@ DoctorBot.prototype._init = function() {
 	var are2=/(\S)\s*\*\s*$/;
 	var are3=/^\s*\*\s*$/;
 	var wsre=/\s+/g;
-	for (var k=0; k<doctorKeywords.length; k++) {
-		var rules=doctorKeywords[k][2];
-		doctorKeywords[k][3]=k; // save original index for sorting
+	for (var k=0; k<puaKeywords.length; k++) {
+		var rules=puaKeywords[k][2];
+		puaKeywords[k][3]=k; // save original index for sorting
 		for (var i=0; i<rules.length; i++) {
 			var r=rules[i];
 			// check mem flag and store it as decomp's element 2
@@ -151,45 +103,45 @@ DoctorBot.prototype._init = function() {
 		}
 	}
 	// now sort keywords by rank (highest first)
-	doctorKeywords.sort(this._sortKeywords);
+	puaKeywords.sort(this._sortKeywords);
 	// and compose regexps and refs for pres and posts
-	DoctorBot.prototype.pres={};
-	DoctorBot.prototype.posts={};
-	if ((global.doctorPres) && (doctorPres.length)) {
+	PUABot.prototype.pres={};
+	PUABot.prototype.posts={};
+	if ((global.puaPres) && (puaPres.length)) {
 		var a=new Array();
-		for (var i=0; i<doctorPres.length; i+=2) {
-			a.push(doctorPres[i]);
-			DoctorBot.prototype.pres[doctorPres[i]]=doctorPres[i+1];
+		for (var i=0; i<puaPres.length; i+=2) {
+			a.push(puaPres[i]);
+			PUABot.prototype.pres[puaPres[i]]=puaPres[i+1];
 		}
-		DoctorBot.prototype.preExp = new RegExp('\\b('+a.join('|')+')\\b');
+		PUABot.prototype.preExp = new RegExp('\\b('+a.join('|')+')\\b');
 	}
 	else {
 		// default (should not match)
-		DoctorBot.prototype.preExp = /####/;
-		DoctorBot.prototype.pres['####']='####';
+		PUABot.prototype.preExp = /####/;
+		PUABot.prototype.pres['####']='####';
 	}
-	if ((global.doctorPosts) && (doctorPosts.length)) {
+	if ((global.puaPosts) && (puaPosts.length)) {
 		var a=new Array();
-		for (var i=0; i<doctorPosts.length; i+=2) {
-			a.push(doctorPosts[i]);
-			DoctorBot.prototype.posts[doctorPosts[i]]=doctorPosts[i+1];
+		for (var i=0; i<puaPosts.length; i+=2) {
+			a.push(puaPosts[i]);
+			PUABot.prototype.posts[puaPosts[i]]=puaPosts[i+1];
 		}
-		DoctorBot.prototype.postExp = new RegExp('\\b('+a.join('|')+')\\b');
+		PUABot.prototype.postExp = new RegExp('\\b('+a.join('|')+')\\b');
 	}
 	else {
 		// default (should not match)
-		DoctorBot.prototype.postExp = /####/;
-		DoctorBot.prototype.posts['####']='####';
+		PUABot.prototype.postExp = /####/;
+		PUABot.prototype.posts['####']='####';
 	}
-	// check for doctorQuits and install default if missing
-	if ((!global.doctorQuits) || (typeof doctorQuits.length == 'undefined')) {
-		doctorQuits=[];
+	// check for puaQuits and install default if missing
+	if ((!global.puaQuits) || (typeof puaQuits.length == 'undefined')) {
+		puaQuits=[];
 	}
 	// done
-	DoctorBot.prototype._dataParsed=true;
+	PUABot.prototype._dataParsed=true;
 }
 
-DoctorBot.prototype._sortKeywords = function(a,b) {
+PUABot.prototype._sortKeywords = function(a,b) {
 	// sort by rank
 	if (a[1]>b[1]) return -1
 	else if (a[1]<b[1]) return 1
@@ -199,7 +151,7 @@ DoctorBot.prototype._sortKeywords = function(a,b) {
 	else return 0;
 }
 
-DoctorBot.prototype.transform = function(text) {
+PUABot.prototype.transform = function(text) {
 	var rpl='';
 	this.quit=false;
 	// unify text string
@@ -215,8 +167,8 @@ DoctorBot.prototype.transform = function(text) {
 		var part=parts[i];
 		if (part!='') {
 			// check for quit expression
-			for (var q=0; q<doctorQuits.length; q++) {
-				if (doctorQuits[q]==part) {
+			for (var q=0; q<puaQuits.length; q++) {
+				if (puaQuits[q]==part) {
 					this.quit=true;
 					return this.getFinal();
 				}
@@ -235,8 +187,8 @@ DoctorBot.prototype.transform = function(text) {
 			}
 			this.sentence=part;
 			// loop trough keywords
-			for (var k=0; k<doctorKeywords.length; k++) {
-				if (part.search(new RegExp('\\b'+doctorKeywords[k][0]+'\\b', 'i'))>=0) {
+			for (var k=0; k<puaKeywords.length; k++) {
+				if (part.search(new RegExp('\\b'+puaKeywords[k][0]+'\\b', 'i'))>=0) {
 					rpl = this._execRule(k);
 				}
 				if (rpl!='') return rpl;
@@ -255,8 +207,8 @@ DoctorBot.prototype.transform = function(text) {
 	return (rpl!='')? rpl : 'I am at a loss for words.';
 }
 
-DoctorBot.prototype._execRule = function(k) {
-	var rule=doctorKeywords[k];
+PUABot.prototype._execRule = function(k) {
+	var rule=puaKeywords[k];
 	var decomps=rule[2];
 	var paramre=/\(([0-9]+)\)/;
 	for (var i=0; i<decomps.length; i++) {
@@ -276,8 +228,8 @@ DoctorBot.prototype._execRule = function(k) {
 				this.lastchoice[k][i]=ri;
 			}
 			var rpl=reasmbs[ri];
-			if (this.debug) alert('match:\nkey: '+doctorKeywords[k][0]+
-				'\nrank: '+doctorKeywords[k][1]+
+			if (this.debug) alert('match:\nkey: '+puaKeywords[k][0]+
+				'\nrank: '+puaKeywords[k][1]+
 				'\ndecomp: '+decomps[i][0]+
 				'\nreasmb: '+rpl+
 				'\nmemflag: '+memflag);
@@ -318,14 +270,14 @@ DoctorBot.prototype._execRule = function(k) {
 	return '';
 }
 
-DoctorBot.prototype._postTransform = function(s) {
+PUABot.prototype._postTransform = function(s) {
 	// final cleanings
 	s=s.replace(/\s{2,}/g, ' ');
 	s=s.replace(/\s+\./g, '.');
-	if ((this.global.doctorPostTransforms) && (doctorPostTransforms.length)) {
-		for (var i=0; i<doctorPostTransforms.length; i+=2) {
-			s=s.replace(doctorPostTransforms[i], doctorPostTransforms[i+1]);
-			doctorPostTransforms[i].lastIndex=0;
+	if ((this.global.puaPostTransforms) && (puaPostTransforms.length)) {
+		for (var i=0; i<puaPostTransforms.length; i+=2) {
+			s=s.replace(puaPostTransforms[i], puaPostTransforms[i+1]);
+			puaPostTransforms[i].lastIndex=0;
 		}
 	}
 	// capitalize first char (v.1.1: work around lambda function)
@@ -337,19 +289,19 @@ DoctorBot.prototype._postTransform = function(s) {
 	return s;
 }
 
-DoctorBot.prototype._getRuleIndexByKey = function(key) {
-	for (var k=0; k<doctorKeywords.length; k++) {
-		if (doctorKeywords[k][0]==key) return k;
+PUABot.prototype._getRuleIndexByKey = function(key) {
+	for (var k=0; k<puaKeywords.length; k++) {
+		if (puaKeywords[k][0]==key) return k;
 	}
 	return -1;
 }
 
-DoctorBot.prototype._memSave = function(t) {
+PUABot.prototype._memSave = function(t) {
 	this.mem.push(t);
 	if (this.mem.length>this.memSize) this.mem.shift();
 }
 
-DoctorBot.prototype._memGet = function() {
+PUABot.prototype._memGet = function() {
 	if (this.mem.length) {
 		if (this.noRandom) return this.mem.shift();
 		else {
@@ -363,14 +315,14 @@ DoctorBot.prototype._memGet = function() {
 	else return '';
 }
 
-DoctorBot.prototype.getFinal = function() {
-	if (!DoctorBot.prototype.global.doctorFinals) return '';
-	return doctorFinals[Math.floor(Math.random()*doctorFinals.length)];
+PUABot.prototype.getFinal = function() {
+	if (!PUABot.prototype.global.puaFinals) return '';
+	return puaFinals[Math.floor(Math.random()*puaFinals.length)];
 }
 
-DoctorBot.prototype.getInitial = function() {
-	if (!DoctorBot.prototype.global.doctorInitials) return '';
-	return doctorInitials[Math.floor(Math.random()*doctorInitials.length)];
+PUABot.prototype.getInitial = function() {
+	if (!PUABot.prototype.global.puaInitials) return '';
+	return puaInitials[Math.floor(Math.random()*puaInitials.length)];
 }
 
 
